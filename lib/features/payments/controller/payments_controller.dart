@@ -29,14 +29,14 @@ class PaymentsController extends ChangeNotifier {
     },
     {
       "logo": AssetsPath.request,
-      "title": "Re-initiate Successful\n  Payment - Request",
+      "title": "Re-initiate Successful\nPayment - Request",
       'route': RoutesPath.payments,
       "cardColor": AppColor.card2,
       "cardTitle": AppColor.card2Title
     },
     {
       "logo": AssetsPath.approval,
-      "title": "Re-initiate Successful\n Payment - Approval",
+      "title": "Re-initiate Successful\nPayment - Approval",
       'route': RoutesPath.others,
       "cardColor": AppColor.card3,
       "cardTitle": AppColor.card3Title
@@ -50,7 +50,7 @@ class PaymentsController extends ChangeNotifier {
     },
     {
       "logo": AssetsPath.succesDebitAdvice,
-      "title": "Successful payment\n     to debit advise",
+      "title": "Successful payment\nto debit advise",
       'route': RoutesPath.sbi,
       "cardColor": AppColor.card5,
       "cardTitle": AppColor.card5Title
@@ -71,7 +71,7 @@ class PaymentsController extends ChangeNotifier {
     },
     {
       "logo": AssetsPath.pending,
-      "title": "Bulk reinitiate debit \n advise pending",
+      "title": "Bulk reinitiate debit\nadvise pending",
       'route': RoutesPath.sbi,
       "cardColor": AppColor.card8,
       "cardTitle": AppColor.card8Title

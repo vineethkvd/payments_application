@@ -79,7 +79,7 @@ class DrawerWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.2),
+          color: isSelected ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.2),
           borderRadius: BorderRadius.circular(6.0),
         ),
         height: 50,
@@ -103,16 +103,17 @@ class DrawerWidget extends StatelessWidget {
                     child: Text(
                       text,
                       maxLines: 2,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white,fontFamily: 'poppinsRegular',fontSize: 12),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   SvgPicture.asset(
                     AssetsPath.arrowBack,
-                    width: 16,
-                    height: 16,
+                    width: 22,
+                    height: 22,
                     color: Colors.white,
                   ),
+
                 ],
               ),
             ),
@@ -121,8 +122,8 @@ class DrawerWidget extends StatelessWidget {
             : Center(
           child: SvgPicture.asset(
             icon,
-            width: 22,
-            height: 22,
+            width: 16,
+            height: 16,
             color: Colors.white,
           ),
         ),

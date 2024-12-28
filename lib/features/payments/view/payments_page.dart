@@ -8,7 +8,6 @@ import '../../../core/utils/config/styles/colors.dart';
 import '../../../core/utils/shared/component/widgets/custom_textfield.dart';
 import '../../../core/utils/shared/constant/assets_path.dart';
 import '../../bread_crumbs/view/bread_crumbs.dart';
-import '../../home/controller/home_controller.dart';
 import '../controller/payments_controller.dart';
 
 class PaymentsPage extends StatefulWidget {
@@ -165,50 +164,60 @@ class PaymentTabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PaymentsController>(
-      builder: (context, paymentProvider, child) {
-        return paymentProvider.isLoading
-            ? GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 2.5,
-          ),
-          itemCount: 6, // Number of shimmer placeholders
-          itemBuilder: (context, index) =>
-              ShimmerWidget(height: 100, width: double.infinity),
-        )
-            : GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 2.5,
-          ),
-          itemCount: paymentProvider.filteredItems.length,
-          itemBuilder: (context, index) {
-            final item = paymentProvider.filteredItems[index];
-            return GestureDetector(
-              onTap: () {
-                context.go(item['route'] as String);
-              },
-              child: buildGridItem(item),
-            );
+    var size = MediaQuery.of(context).size;
+    final paymentProvider = Provider.of<PaymentsController>(context);
+    final isMobile = size.width < 600;
+    final isTablet = size.width >= 600 && size.width < 1024;
+    final crossAxisCount = isMobile
+        ? 1
+        : (isTablet ? 2 : 3);
+
+    return paymentProvider.isLoading
+        ? ListView.builder(
+      itemCount: 6,
+      itemBuilder: (context, index) =>
+      const ShimmerWidget(height: 40, width: double.infinity),
+    )
+        : (isMobile
+        ? ListView.builder(
+      itemCount: paymentProvider.filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = paymentProvider.filteredItems[index];
+        return GestureDetector(
+          onTap: () {
+            context.go(item['route'] as String);
           },
+          child: buildCardItem(item), // Use container-based card
         );
       },
-    );
+    )
+        : GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 2.5,
+      ),
+      itemCount: paymentProvider.filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = paymentProvider.filteredItems[index];
+        return GestureDetector(
+          onTap: () {
+            context.go(item['route'] as String);
+          },
+          child: buildGridItem(item),
+        );
+      },
+    ));
   }
 }
-
 
 class ReportTabItem extends StatelessWidget {
   const ReportTabItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PaymentTabItem(); // Reuse the same structure for reports
+    return const PaymentTabItem(); // Reuse the same structure for reports
   }
 }
 
@@ -239,6 +248,49 @@ class ShimmerWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildCardItem(Map<String, dynamic> item) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+    child: Container(
+      decoration: BoxDecoration(
+        color: item['cardColor'] as Color,
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(12.0),
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            item['logo'] as String,
+            width: 40,
+            height: 40,
+            color: item['cardTitle'] as Color,
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Text(
+              item['title'] as String,
+              style: TextStyle(
+                fontFamily: 'poppinsRegular',
+                color: item['cardTitle'] as Color,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 Widget buildGridItem(Map<String, dynamic> item) {

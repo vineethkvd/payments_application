@@ -153,8 +153,9 @@ class HomePage extends StatelessWidget {
                                   child: Text(
                                     "No items found",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: AppColor.drawerColor,
                                       fontSize: 16,
+                                      fontFamily:     'poppinsRegular',
                                     ),
                                   ),
                                 );
@@ -186,8 +187,8 @@ class HomePage extends StatelessWidget {
                                               children: [
                                                 SvgPicture.asset(
                                                   item['logo'] as String,
-                                                  width: 50,
-                                                  height: 50,
+                                                  width: 25,
+                                                  height: 25,
                                                   color: item['cardTitle'] as Color,
                                                 ),
                                                 const SizedBox(width: 16),
@@ -200,7 +201,7 @@ class HomePage extends StatelessWidget {
                                                       color: item['cardTitle']
                                                       as Color,
                                                       fontWeight: FontWeight.bold,
-                                                      fontSize: 18,
+                                                      fontSize: 13,
                                                     ),
                                                   ),
                                                 ),

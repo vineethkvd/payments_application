@@ -57,7 +57,7 @@ class MainShell extends StatelessWidget {
                     children: [
                       if (!isTablet)
                         IconButton(
-                          icon: const Icon(Icons.menu),
+                          icon: const Icon(Icons.menu,color: AppColor.appBarColor,),
                           onPressed: () {
                             scaffoldKey.currentState?.openDrawer();
                           },
@@ -68,7 +68,7 @@ class MainShell extends StatelessWidget {
                             return IconButton(
                               icon: Icon(sliderController.isDrawerExpanded
                                   ? Icons.menu_open
-                                  : Icons.menu),
+                                  : Icons.menu,color: AppColor.appBarColor,),
                               onPressed: sliderController.toggleDrawerExpansion,
                             );
                           },
