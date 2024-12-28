@@ -1,39 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:payments_application/features/drawer/view/drawer_widget.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/utils/config/styles/colors.dart';
+import '../../../drawer/controller/drawer_controller.dart';
 
 class MainShell extends StatelessWidget {
   final Widget child;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-   MainShell({super.key, required this.child});
+
+  const MainShell({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final scaffoldKey = GlobalKey<ScaffoldState>();
+    final size = MediaQuery.of(context).size;
 
-    final isTablet = size.width >= 600;
-    final drawerWidth = isTablet ? size.width * 0.2 : size.width * 0.5;
+    final isTablet = size.width >= 900;
     final appBarHeight = size.height * 0.073;
 
     return Scaffold(
       key: scaffoldKey,
       drawer: Drawer(
-        width: drawerWidth,
-        child: const DrawerWidget(),
+        child: DrawerWidget(),
       ),
       body: Row(
         children: [
-          // Drawer for tablet (always visible as a side panel)
           if (isTablet)
-            SizedBox(
-              width: drawerWidth,
-              child: const DrawerWidget(),
+            Consumer<SliderController>(
+              builder: (context, sliderController, child) {
+                final drawerWidth = sliderController.isDrawerExpanded
+                    ? size.width * 0.17
+                    : size.width * 0.05;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: drawerWidth,
+                  child: DrawerWidget(),
+                );
+              },
             ),
-          // Main Content Area
           Expanded(
             child: Column(
               children: [
-                // AppBar with Menu Icon
                 Container(
                   decoration: const BoxDecoration(
                     color: AppColor.appbarColor,
@@ -49,14 +55,24 @@ class MainShell extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      !isTablet
-                          ? IconButton(
-                        icon: const Icon(Icons.menu),
-                        onPressed: () {
-                          scaffoldKey.currentState?.openDrawer(); // Open the drawer
-                        },
-                      )
-                          : SizedBox.shrink(),
+                      if (!isTablet)
+                        IconButton(
+                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            scaffoldKey.currentState?.openDrawer();
+                          },
+                        ),
+                      if (isTablet)
+                        Consumer<SliderController>(
+                          builder: (context, sliderController, child) {
+                            return IconButton(
+                              icon: Icon(sliderController.isDrawerExpanded
+                                  ? Icons.menu_open
+                                  : Icons.menu),
+                              onPressed: sliderController.toggleDrawerExpansion,
+                            );
+                          },
+                        ),
                       const SizedBox(width: 8),
                       const Text(
                         "Payments Application",
@@ -69,10 +85,7 @@ class MainShell extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Main Content
-                Expanded(
-                  child: child,
-                ),
+                Expanded(child: child),
               ],
             ),
           ),

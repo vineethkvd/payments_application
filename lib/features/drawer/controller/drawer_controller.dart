@@ -25,4 +25,13 @@ class SliderController extends ChangeNotifier {
     _selectedItem = item;
     notifyListeners();
   }
+
+  bool _isDrawerExpanded = true;
+
+  bool get isDrawerExpanded => _isDrawerExpanded;
+
+  void toggleDrawerExpansion() {
+    _isDrawerExpanded = !_isDrawerExpanded;
+    notifyListeners();
+  }
 }

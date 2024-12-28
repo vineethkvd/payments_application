@@ -11,16 +11,15 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawerProvider = Provider.of<SliderController>(context);
+    final sliderController = Provider.of<SliderController>(context);
     final size = MediaQuery.of(context).size;
-    final isTablet = size.width >= 600;
+    final isTablet = size.width >= 900;
 
     return Container(
       color: AppColor.drawerColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Drawer Header
           Container(
             decoration: const BoxDecoration(
               color: AppColor.drawerImgTileColor,
@@ -36,14 +35,14 @@ class DrawerWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Image.asset("assets/images/app_logo.png"),
           ),
-          // Drawer Items
           Expanded(
             child: ListView.builder(
-              itemCount: drawerProvider.items.length,
+              itemCount: sliderController.items.length,
               padding: const EdgeInsets.all(8.0),
               itemBuilder: (context, index) {
-                final item = drawerProvider.items[index];
-                final isSelected = drawerProvider.selectedItem == item['title'];
+                final item = sliderController.items[index];
+                final isSelected =
+                    sliderController.selectedItem == item['title'];
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
@@ -52,13 +51,13 @@ class DrawerWidget extends StatelessWidget {
                     text: item['title'].toString(),
                     isSelected: isSelected,
                     onTap: () {
-                      drawerProvider.setSelectedItem(item['title']!);
+                      sliderController.setSelectedItem(item['title']!);
                       context.go(item['route']!);
-
                       if (!isTablet) {
-                        Navigator.of(context).pop(); // Close drawer on mobile
+                        Navigator.of(context).pop();
                       }
                     },
+                    isExpanded: sliderController.isDrawerExpanded,
                   ),
                 );
               },
@@ -74,16 +73,18 @@ class DrawerWidget extends StatelessWidget {
     required String text,
     required bool isSelected,
     required VoidCallback onTap,
+    required bool isExpanded,
   }) {
     return InkWell(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.2),
           borderRadius: BorderRadius.circular(6.0),
         ),
         height: 50,
-        child: Row(
+        child: isExpanded
+            ? Row(
           children: [
             const SizedBox(width: 12),
             SvgPicture.asset(
@@ -94,28 +95,40 @@ class DrawerWidget extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
-                  fontFamily: 'poppinsRegular',
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      text,
+                      maxLines: 2,
+                      style: const TextStyle(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SvgPicture.asset(
+                    AssetsPath.arrowBack,
+                    width: 16,
+                    height: 16,
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 10),
-            SvgPicture.asset(
-              AssetsPath.arrowBack,
-              width: 16,
-              height: 16,
-              color: Colors.white,
-            ),
-            const SizedBox(width: 12),
           ],
+        )
+            : Center(
+          child: SvgPicture.asset(
+            icon,
+            width: 22,
+            height: 22,
+            color: Colors.white,
+          ),
         ),
+
       ),
     );
   }
+
 }
