@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:payments_application/core/helpers/routes/app_route_name.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../core/helpers/routes/app_route_path.dart';
 import '../../../core/utils/config/styles/colors.dart';
 import '../../../core/utils/shared/component/widgets/custom_textfield.dart';
 import '../../../core/utils/shared/constant/assets_path.dart';
@@ -216,38 +218,59 @@ class PaymentTabItem extends StatelessWidget {
     // Display filtered items
     return isMobile
         ? ListView.builder(
-      itemCount: paymentProvider.filteredItems.length,
-      itemBuilder: (context, index) {
-        final item = paymentProvider.filteredItems[index];
-        return GestureDetector(
-          onTap: () {
-            context.go(item['route'] as String);
-          },
-          child: buildCardItem(item), // Use container-based card
-        );
-      },
-    )
+            itemCount: paymentProvider.filteredItems.length,
+            itemBuilder: (context, index) {
+              final item = paymentProvider.filteredItems[index];
+              return GestureDetector(
+                onTap: () {
+                  if (item['route'] == RoutesPath.re_initiate) {
+                    context.goNamed(
+                      RoutesName.reInitiate,
+                      pathParameters: {
+                        "userId": "1001",
+                        "userName": "Raihan",
+                      },
+                    );
+
+                  } else {
+                    context.go(item['route'] as String);
+                  }
+                },
+                child: buildCardItem(item), // Use container-based card
+              );
+            },
+          )
         : GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 2.5,
-      ),
-      itemCount: paymentProvider.filteredItems.length,
-      itemBuilder: (context, index) {
-        final item = paymentProvider.filteredItems[index];
-        return GestureDetector(
-          onTap: () {
-            context.go(item['route'] as String);
-          },
-          child: buildGridItem(item),
-        );
-      },
-    );
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 2.5,
+            ),
+            itemCount: paymentProvider.filteredItems.length,
+            itemBuilder: (context, index) {
+              final item = paymentProvider.filteredItems[index];
+              return GestureDetector(
+                onTap: () {
+                  if (item['route'] == RoutesPath.re_initiate) {
+                    context.goNamed(
+                      RoutesName.reInitiate,
+                      pathParameters: {
+                        "userId": "1001",
+                        "userName": "Raihan",
+                      },
+                    );
+
+                  } else {
+                    context.go(item['route'] as String);
+                  }
+                },
+                child: buildGridItem(item),
+              );
+            },
+          );
   }
 }
-
 
 class ReportTabItem extends StatelessWidget {
   const ReportTabItem({super.key});

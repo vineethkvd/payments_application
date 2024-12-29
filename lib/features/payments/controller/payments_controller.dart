@@ -23,7 +23,7 @@ class PaymentsController extends ChangeNotifier {
     {
       "logo": AssetsPath.reinitiate,
       "title": "Re-initiate",
-      'route': RoutesPath.home,
+      'route': RoutesPath.re_initiate,
       "cardColor": AppColor.card1,
       "cardTitle": AppColor.card1Title
     },

@@ -4,6 +4,7 @@ import 'package:payments_application/features/home/view/home_page.dart';
 import 'package:payments_application/features/others/view/others_page.dart';
 import 'package:payments_application/features/otp_based/view/otp_based_page.dart';
 import 'package:payments_application/features/payments/view/payments_page.dart';
+import 'package:payments_application/features/payments/view/re_initiate/view/re_initiate_page.dart';
 import 'package:payments_application/features/sbi/view/sbi_page.dart';
 import '../../../features/home/view/shell/main_shell.dart';
 import 'app_route_name.dart';
@@ -45,6 +46,23 @@ class AppRoutes {
                         (context, animation, secondaryAnimation, child) =>
                             FadeTransition(opacity: animation, child: child),
                   ),
+                  routes: [
+                    GoRoute(
+                      name: RoutesName.reInitiate,
+                      path: 're_initiate/:userId/:userName',
+                      pageBuilder: (context, state) {
+                        final userId = int.tryParse(state.pathParameters['userId'] ?? '') ?? 0;
+                        final userName = state.pathParameters['userName'] ?? '';
+                        return CustomTransitionPage<void>(
+                          key: state.pageKey,
+                          child: ReInitiatePage(userId: userId, userName: userName),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                        );
+                      },
+                    ),
+
+                  ]
                 ),
                 GoRoute(
                   name: RoutesName.others,

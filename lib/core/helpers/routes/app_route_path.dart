@@ -4,4 +4,5 @@ class RoutesPath {
   static const String sbi = '/home/sbi';
   static const String otp_based = '/home/otp_based';
   static const String payments = '/home/payments';
+  static const String re_initiate = '/home/payments/re_initiate/:name/:id';
 }
