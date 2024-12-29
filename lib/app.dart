@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Manappuram AppSuite',
+      title: 'Payments Applications',
       theme: ThemeData.dark(),
       routerConfig: AppRoutes().appRouter,
     );
