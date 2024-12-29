@@ -168,17 +168,53 @@ class PaymentTabItem extends StatelessWidget {
     final paymentProvider = Provider.of<PaymentsController>(context);
     final isMobile = size.width < 600;
     final isTablet = size.width >= 600 && size.width < 1024;
-    final crossAxisCount = isMobile
-        ? 1
-        : (isTablet ? 2 : 3);
+    final crossAxisCount = isMobile ? 1 : (isTablet ? 2 : 3);
 
-    return paymentProvider.isLoading
-        ? ListView.builder(
-      itemCount: 6,
-      itemBuilder: (context, index) =>
-      const ShimmerWidget(height: 40, width: double.infinity),
-    )
-        : (isMobile
+    if (paymentProvider.isLoading) {
+      // Display shimmer effect based on screen size
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 600) {
+            // Mobile Layout - Shimmer ListView
+            return ListView.builder(
+              itemCount: 6,
+              itemBuilder: (context, index) =>
+                  shimmerWidget(height: 100, width: double.infinity),
+            );
+          } else {
+            // Tablet/Desktop Layout - Shimmer GridView
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 2.5,
+              ),
+              itemCount: 6,
+              itemBuilder: (context, index) =>
+                  shimmerWidget(height: 100, width: double.infinity),
+            );
+          }
+        },
+      );
+    }
+
+    if (paymentProvider.filteredItems.isEmpty) {
+      // Display "No items found" message
+      return const Center(
+        child: Text(
+          "No items found",
+          style: TextStyle(
+            color: AppColor.drawerColor,
+            fontSize: 16,
+            fontFamily: 'poppinsRegular',
+          ),
+        ),
+      );
+    }
+
+    // Display filtered items
+    return isMobile
         ? ListView.builder(
       itemCount: paymentProvider.filteredItems.length,
       itemBuilder: (context, index) {
@@ -208,46 +244,33 @@ class PaymentTabItem extends StatelessWidget {
           child: buildGridItem(item),
         );
       },
-    ));
+    );
   }
 }
+
 
 class ReportTabItem extends StatelessWidget {
   const ReportTabItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const PaymentTabItem(); // Reuse the same structure for reports
+    return const PaymentTabItem();
   }
 }
 
-class ShimmerWidget extends StatelessWidget {
-  final double height;
-  final double width;
-  final BorderRadius? borderRadius;
-
-  const ShimmerWidget({
-    required this.height,
-    required this.width,
-    this.borderRadius,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: borderRadius ?? BorderRadius.circular(8.0),
-        ),
+Widget shimmerWidget({required double height, required double width}) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
       ),
-    );
-  }
+    ),
+  );
 }
 
 Widget buildCardItem(Map<String, dynamic> item) {
@@ -257,22 +280,14 @@ Widget buildCardItem(Map<String, dynamic> item) {
       decoration: BoxDecoration(
         color: item['cardColor'] as Color,
         borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 5,
-            spreadRadius: 2,
-            offset: const Offset(0, 3),
-          ),
-        ],
       ),
       padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
           SvgPicture.asset(
             item['logo'] as String,
-            width: 40,
-            height: 40,
+            width: 25,
+            height: 25,
             color: item['cardTitle'] as Color,
           ),
           const SizedBox(width: 15),
@@ -283,7 +298,7 @@ Widget buildCardItem(Map<String, dynamic> item) {
                 fontFamily: 'poppinsRegular',
                 color: item['cardTitle'] as Color,
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 13,
               ),
             ),
           ),
